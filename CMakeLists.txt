@@ -64,13 +64,24 @@ set_source_files_properties(
 add_library(kphp-timelib STATIC ${TIMELIB_ALL_SOURCES})
 add_library(vk::kphp-timelib ALIAS kphp-timelib)
 
-target_compile_options(kphp-timelib PRIVATE
-    -std=gnu11
-    -O3
-    -Wall -Werror -Wextra -Wmissing-field-initializers -Wshadow
-    -Wno-unused-parameter -Wno-float-conversion
-    -DHAVE_STDINT_H -DHAVE_GETTIMEOFDAY -DHAVE_UNISTD_H -DHAVE_DIRENT_H
-)
+if(MSYS)
+  target_compile_options(kphp-timelib PRIVATE
+      -std=gnu11
+      -O3
+      -Wall -Wextra -Wmissing-field-initializers -Wshadow
+      -Wno-unused-parameter -Wno-float-conversion
+      -DHAVE_STDINT_H -DHAVE_GETTIMEOFDAY -DHAVE_UNISTD_H -DHAVE_DIRENT_H
+  )
+else()
+  target_compile_options(kphp-timelib PRIVATE
+      -std=gnu11
+      -O3
+      -Wall -Werror -Wextra -Wmissing-field-initializers -Wshadow
+      -Wno-unused-parameter -Wno-float-conversion
+      -DHAVE_STDINT_H -DHAVE_GETTIMEOFDAY -DHAVE_UNISTD_H -DHAVE_DIRENT_H
+  )
+endif()
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(kphp-timelib PRIVATE -Wmaybe-uninitialized)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "7.0.0")
